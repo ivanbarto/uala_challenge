@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val citiesDataModule = module {
     single { Client.citiesApi() }
-    single { CityRepositoryImpl(get()) }
+    single { CityRepositoryImpl() }
 }

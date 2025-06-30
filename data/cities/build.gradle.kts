@@ -20,4 +20,6 @@ dependencies {
     testImplementation(libs.koin.test)
     testImplementation(libs.junit.junit)
     testImplementation(libs.mockwebserver)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.koin.test.junit4)
 }
