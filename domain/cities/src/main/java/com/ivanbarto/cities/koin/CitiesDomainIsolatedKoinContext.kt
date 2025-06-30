@@ -2,9 +2,9 @@ package com.ivanbarto.cities.koin
 
 import org.koin.dsl.koinApplication
 
-internal object CitiesDataIsolatedKoinContext {
+object CitiesDomainIsolatedKoinContext {
     private val koinApp = koinApplication {
-        modules(citiesDataModule)
+        modules(citiesDataModule(), citiesDomainModule)
     }
 
     val koin = koinApp.koin

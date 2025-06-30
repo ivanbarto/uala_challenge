@@ -3,10 +3,10 @@ package com.ivanbarto.cities.datasource.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class CityDto(
-    val country: String?,
-    val name: String?,
+    val country: String? = null,
+    val name: String? = null,
     @SerializedName("_id")
-    val id: String?,
+    val id: String? = null,
     @SerializedName("coord")
-    val coordinate: CoordinateDto
+    val coordinate: CoordinateDto? = null
 )

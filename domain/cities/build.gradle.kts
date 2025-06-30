@@ -12,15 +12,7 @@ kotlin {
     }
 }
 dependencies {
-    implementation(libs.retrofit)
-    implementation(libs.gson)
-    implementation(libs.converter.gson)
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
-
-    testImplementation(libs.koin.test)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.mockwebserver)
-    testImplementation(libs.kotlinx.coroutines.core)
-    testImplementation(libs.koin.test.junit4)
+    implementation(project(":data:cities"))
 }
