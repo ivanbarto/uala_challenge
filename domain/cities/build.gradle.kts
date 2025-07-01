@@ -15,4 +15,6 @@ dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(project(":data:cities"))
+
+    testImplementation(libs.koin.test.junit4)
 }

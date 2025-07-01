@@ -1,8 +1,8 @@
 package com.ivanbarto.cities
 
-import com.ivanbarto.cities.datasource.remote.CitiesApi
-import com.ivanbarto.cities.koin.CitiesDataIsolatedKoinContext
-import com.ivanbarto.cities.koin.citiesDataModule
+import com.ivanbarto.cities.interactors.CityInteractor
+import com.ivanbarto.cities.koin.CitiesDomainIsolatedKoinContext
+import com.ivanbarto.cities.koin.citiesDomainModule
 import com.ivanbarto.cities.repository.CityRepository
 import org.junit.After
 import org.junit.Test
@@ -15,28 +15,27 @@ import org.koin.test.verify.verify
 import kotlin.test.assertNotNull
 
 class ModuleTest : KoinTest {
-    override fun getKoin(): Koin = CitiesDataIsolatedKoinContext.koin
+    override fun getKoin(): Koin = CitiesDomainIsolatedKoinContext.koin
 
-    private val citiesApi: CitiesApi by inject()
-    private val cityRepository: CityRepository by inject()
-
-    @After
-    fun release() {
-        stopKoin()
-    }
+    val interactor: CityInteractor by inject()
+    val repository: CityRepository by inject()
 
     @OptIn(KoinExperimentalAPI::class)
     @Test
     fun verify_modules() {
-        citiesDataModule().forEach {
+        citiesDomainModule().forEach {
             it.verify()
         }
     }
 
-    @Test
-    fun components_should_exist() {
-        assertNotNull(citiesApi)
-        assertNotNull(cityRepository)
+    @After
+    fun stopClient() {
+        stopKoin()
     }
 
+    @Test
+    fun components_should_exist() {
+        assertNotNull(interactor)
+        assertNotNull(repository)
+    }
 }
