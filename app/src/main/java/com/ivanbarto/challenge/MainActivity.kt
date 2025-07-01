@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.ivanbarto.challenge.presentation.cities.CitiesScreen
 import com.ivanbarto.challenge.presentation.cities.CitiesViewModel
 import com.ivanbarto.challenge.ui.theme.ChallengeTheme
 import org.koin.androidx.compose.KoinAndroidContext
@@ -23,18 +24,10 @@ import org.koin.compose.KoinApplication
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             ChallengeTheme {
-                val viewModel: CitiesViewModel = koinViewModel()
-
-                val state = viewModel.cities.collectAsState().value
-
-                LazyColumn {
-                    items(state){
-                        Text(it.name)
-                    }
-                }
+                CitiesScreen()
             }
         }
     }

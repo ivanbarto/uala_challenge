@@ -9,5 +9,6 @@ import org.koin.core.component.inject
 class CityInteractorImpl : CityInteractor, CitiesDomainIsolatedKoinComponent {
     private val cityRepository: CityRepository by inject()
 
-    override suspend fun cities(): List<City> = cityRepository.cities().map { it.toDomain() }
+    override suspend fun cities(): List<City> =
+        cityRepository.cities().map { it.toDomain() }.sortedBy { it.name + it.country }
 }
