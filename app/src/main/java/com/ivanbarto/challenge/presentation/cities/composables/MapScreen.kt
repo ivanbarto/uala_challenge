@@ -1,6 +1,5 @@
 package com.ivanbarto.challenge.presentation.cities.composables
 
-import android.icu.util.TimeUnit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -12,7 +11,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.ivanbarto.domain.cities.models.City
 import org.koin.core.time.inMs
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 
