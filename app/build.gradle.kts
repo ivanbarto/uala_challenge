@@ -59,4 +59,5 @@ dependencies {
 
     implementation(libs.koin.androidx.compose.navigation)
     implementation(project(":domain:cities"))
+    implementation(libs.maps.compose)
 }

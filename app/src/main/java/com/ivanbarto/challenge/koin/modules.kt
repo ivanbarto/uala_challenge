@@ -1,6 +1,6 @@
 package com.ivanbarto.challenge.koin
 
-import com.ivanbarto.challenge.presentation.cities.CitiesViewModel
+import com.ivanbarto.challenge.presentation.cities.viewModels.CitiesViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

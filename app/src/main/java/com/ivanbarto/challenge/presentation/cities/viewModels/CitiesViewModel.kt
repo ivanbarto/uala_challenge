@@ -1,4 +1,4 @@
-package com.ivanbarto.challenge.presentation.cities
+package com.ivanbarto.challenge.presentation.cities.viewModels
 
 import androidx.lifecycle.viewModelScope
 import com.ivanbarto.challenge.presentation.base.BaseViewModel
@@ -17,6 +17,9 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
 
     private val _cityNameFilter: MutableStateFlow<String> = MutableStateFlow("")
     val cityNameFilter: StateFlow<String> = _cityNameFilter.asStateFlow()
+
+    private val _selectedCity: MutableStateFlow<City?> = MutableStateFlow(null)
+    val selectedCity: StateFlow<City?> = _selectedCity.asStateFlow()
 
 
     val cities: StateFlow<List<City>> = flow {
@@ -40,5 +43,9 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
 
     fun filterCityByName(name: String) {
         _cityNameFilter.value = name
+    }
+
+    fun selectCity(city: City) {
+        _selectedCity.value = city
     }
 }
