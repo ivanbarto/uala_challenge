@@ -1,5 +1,7 @@
 package com.ivanbarto.data.cities
 
+import com.ivanbarto.data.cities.datasource.local.database.CityDataBase
+import com.ivanbarto.data.cities.datasource.local.database.dao.CityDao
 import com.ivanbarto.data.cities.datasource.remote.CitiesApi
 import com.ivanbarto.data.cities.koin.CitiesDataIsolatedKoinContext
 import com.ivanbarto.data.cities.koin.citiesDataModule
@@ -19,6 +21,8 @@ class ModuleTest : KoinTest {
 
     private val citiesApi: CitiesApi by inject()
     private val cityRepository: CityRepository by inject()
+    private val cityDataBase: CityDataBase by inject()
+    private val cityDao: CityDao by inject()
 
     @After
     fun release() {
@@ -37,6 +41,8 @@ class ModuleTest : KoinTest {
     fun components_should_exist() {
         assertNotNull(citiesApi)
         assertNotNull(cityRepository)
+        assertNotNull(cityDataBase)
+        assertNotNull(cityDao)
     }
 
 }

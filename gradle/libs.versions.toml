@@ -2,6 +2,7 @@
 agp = "8.10.1"
 gsonVersion = "2.9.0"
 kotlin = "2.0.21"
+kotlin-ksp = "2.0.21-1.0.27"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -16,9 +17,12 @@ mapsCompose = "4.3.3"
 mockwebserver = "4.10.0"
 retrofitVersion = "2.9.0"
 junitJunit = "4.12"
+room = "2.7.2"
+sqliteBundledJvm = "2.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gsonVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -44,10 +48,14 @@ maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = 
 mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "room" }
+androidx-room-runtime-jvm = { group = "androidx.room", name = "room-runtime-jvm", version.ref = "room" }
+androidx-sqlite-bundled-jvm = { group = "androidx.sqlite", name = "sqlite-bundled-jvm", version.ref = "sqliteBundledJvm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 
