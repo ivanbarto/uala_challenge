@@ -16,15 +16,18 @@ jetbrainsKotlinJvm = "2.0.21"
 koin-bom = "4.1.0"
 mapsCompose = "4.3.3"
 mockwebserver = "4.10.0"
+navigationCompose = "2.9.1"
 retrofitVersion = "2.9.0"
 junitJunit = "4.12"
 room = "2.7.2"
 sqliteBundledJvm = "2.5.2"
 appcompat = "1.7.1"
 material = "1.12.0"
+navigationCommonAndroid = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gsonVersion" }
@@ -58,6 +61,7 @@ androidx-room-runtime-jvm = { group = "androidx.room", name = "room-runtime-jvm"
 androidx-sqlite-bundled-jvm = { group = "androidx.sqlite", name = "sqlite-bundled-jvm", version.ref = "sqliteBundledJvm" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
