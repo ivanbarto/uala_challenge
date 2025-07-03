@@ -18,14 +18,20 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     private val _cityNameFilter: MutableStateFlow<String> = MutableStateFlow("")
     val cityNameFilter: StateFlow<String> = _cityNameFilter.asStateFlow()
 
+    private val _filterFavorites: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val filterFavorites: StateFlow<Boolean> = _filterFavorites.asStateFlow()
+
     private val _selectedCity: MutableStateFlow<City?> = MutableStateFlow(null)
     val selectedCity: StateFlow<City?> = _selectedCity.asStateFlow()
 
     private val _cities: MutableStateFlow<List<City>> = MutableStateFlow(emptyList())
     val cities: StateFlow<List<City>> =
-        _cities.asStateFlow().combine(cityNameFilter) { citiesToFilter, filterValue ->
-            filterCities(citiesToFilter, filterValue)
-        }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        _cities.asStateFlow()
+            .combine(cityNameFilter) { citiesToFilter, filterValue ->
+                filterCities(citiesToFilter, filterValue)
+            }.combine(filterFavorites) { citiesToFilter, shouldFilter ->
+                if (shouldFilter) citiesToFilter.filter { it.savedAsFavourite } else citiesToFilter
+            }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private fun filterCities(
         citiesToFilter: List<City>,
@@ -76,5 +82,9 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
             _cities.value = cityInteractor.cities()
             setUiState(UiState.IDLE)
         }
+    }
+
+    fun filterFavorites(shouldFilter: Boolean) {
+        _filterFavorites.value = shouldFilter
     }
 }
