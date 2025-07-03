@@ -9,6 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,6 +30,7 @@ import com.ivanbarto.challenge.presentation.cities.viewModels.CitiesViewModel
 import com.ivanbarto.challenge.ui.theme.Typography
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CitiesScreen() {
     val viewModel: CitiesViewModel = koinViewModel()
@@ -43,25 +52,42 @@ fun CitiesScreen() {
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             stickyHeader {
-                TextField(
-                    value = cityNameFilter,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { text ->
-                        viewModel.filterCityByName(text)
-                    }
+                SearchBar(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                    inputField = {
+                        SearchBarDefaults.InputField(
+                            query = cityNameFilter,
+                            onQueryChange = { viewModel.filterCityByName(it) },
+                            onSearch = { },
+                            expanded = false,
+                            onExpandedChange = { },
+                            placeholder = { Text("Search a city", style = Typography.bodyMedium) },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                            trailingIcon = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Checkbox(
+                                        checked = filterFavorites,
+                                        onCheckedChange = {
+                                            viewModel.filterFavorites(filterFavorites.not())
+                                        }
+                                    )
+                                    Text(
+                                        modifier = Modifier.padding(end = 8.dp),
+                                        text = "Favorites",
+                                        style = Typography.bodyMedium
+                                    )
+                                }
+                            },
+                        )
+                    },
+                    expanded = false,
+                    onExpandedChange = {},
+                    content = {}
                 )
             }
-            stickyHeader {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Switch(
-                        checked = filterFavorites,
-                        onCheckedChange = {
-                            viewModel.filterFavorites(filterFavorites.not())
-                        }
-                    )
-                    Text(text = "Show Only Favorites", style = Typography.bodyMedium)
-                }
-            }
+
             items(state) { city ->
                 CityItem(
                     city = city,
