@@ -2,8 +2,10 @@ package com.ivanbarto.challenge.presentation.cities.composables
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
@@ -26,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.viewModels.CitiesViewModel
 import com.ivanbarto.challenge.ui.theme.Typography
 import org.koin.androidx.compose.koinViewModel
@@ -36,81 +40,87 @@ fun CitiesScreen() {
     val viewModel: CitiesViewModel = koinViewModel()
 
     val state = viewModel.cities.collectAsState().value
+    val screenState = viewModel.uiState.collectAsState().value
     val cityNameFilter = viewModel.cityNameFilter.collectAsState().value
     val filterFavorites = viewModel.filterFavorites.collectAsState().value
     val selectedCity = viewModel.selectedCity.collectAsState().value
 
     val localConfiguration = LocalConfiguration.current
 
-    Row {
-        LazyColumn(
-            modifier = Modifier
-                .width(0.dp)
-                .weight(1f)
-                .fillMaxHeight()
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            stickyHeader {
-                SearchBar(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                    inputField = {
-                        SearchBarDefaults.InputField(
-                            query = cityNameFilter,
-                            onQueryChange = { viewModel.filterCityByName(it) },
-                            onSearch = { },
-                            expanded = false,
-                            onExpandedChange = { },
-                            placeholder = { Text("Search a city", style = Typography.bodyMedium) },
-                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                            trailingIcon = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Checkbox(
-                                        checked = filterFavorites,
-                                        onCheckedChange = {
-                                            viewModel.filterFavorites(filterFavorites.not())
-                                        }
-                                    )
-                                    Text(
-                                        modifier = Modifier.padding(end = 8.dp),
-                                        text = "Favorites",
-                                        style = Typography.bodyMedium
-                                    )
-                                }
-                            },
-                        )
-                    },
-                    expanded = false,
-                    onExpandedChange = {},
-                    content = {}
-                )
-            }
-
-            items(state) { city ->
-                CityItem(
-                    city = city,
-                    onClick = {
-                        viewModel.selectCity(it)
-                    },
-                    onSeeDetails = {
-
-                    },
-                    onMarkAsFavorite = {
-                        viewModel.markAsFavorite(city)
-                    }
-                )
-            }
-        }
-
-        if (localConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            MapScreen(
-                city = selectedCity, modifier = Modifier
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        Row {
+            LazyColumn(
+                modifier = Modifier
                     .width(0.dp)
                     .weight(1f)
                     .fillMaxHeight()
-            )
+                    .padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                stickyHeader {
+                    SearchBar(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                        inputField = {
+                            SearchBarDefaults.InputField(
+                                query = cityNameFilter,
+                                onQueryChange = { viewModel.filterCityByName(it) },
+                                onSearch = { },
+                                expanded = false,
+                                onExpandedChange = { },
+                                placeholder = { Text("Search a city", style = Typography.bodyMedium) },
+                                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                                trailingIcon = {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Checkbox(
+                                            checked = filterFavorites,
+                                            onCheckedChange = {
+                                                viewModel.filterFavorites(filterFavorites.not())
+                                            }
+                                        )
+                                        Text(
+                                            modifier = Modifier.padding(end = 8.dp),
+                                            text = "Favorites",
+                                            style = Typography.bodyMedium
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                        expanded = false,
+                        onExpandedChange = {},
+                        content = {}
+                    )
+                }
+
+                items(state) { city ->
+                    CityItem(
+                        city = city,
+                        onClick = {
+                            viewModel.selectCity(it)
+                        },
+                        onSeeDetails = {
+
+                        },
+                        onMarkAsFavorite = {
+                            viewModel.markAsFavorite(city)
+                        }
+                    )
+                }
+            }
+
+            if (localConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                MapScreen(
+                    city = selectedCity, modifier = Modifier
+                        .width(0.dp)
+                        .weight(1f)
+                        .fillMaxHeight()
+                )
+            }
+        }
+        if (screenState == UiState.LOADING) {
+            CircularProgressIndicator()
         }
     }
 }

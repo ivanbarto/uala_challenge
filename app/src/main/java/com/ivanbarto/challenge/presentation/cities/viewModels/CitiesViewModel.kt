@@ -5,6 +5,7 @@ import com.ivanbarto.challenge.presentation.base.BaseViewModel
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.domain_cities.City
 import com.ivanbarto.domain_cities.CityInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -51,11 +52,12 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     }
 
     private fun loadCities() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 setUiState(UiState.LOADING)
 
                 _cities.value = cityInteractor.cities()
+
                 cityInteractor.fetchCities()
                 _cities.value = cityInteractor.cities()
 
@@ -75,7 +77,7 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     }
 
     fun markAsFavorite(city: City) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setUiState(UiState.LOADING)
             cityInteractor.markCityAsFavorite(city.copy(savedAsFavourite = city.savedAsFavourite.not()))
 
