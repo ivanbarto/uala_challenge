@@ -38,6 +38,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.monitor)
+    implementation(libs.androidx.sqlite.bundled.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -48,4 +50,9 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.mockk)
 }
