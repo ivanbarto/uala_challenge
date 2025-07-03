@@ -2,11 +2,9 @@ package com.ivanbarto.challenge.presentation.cities.composables
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,9 +47,18 @@ fun CitiesScreen() {
                 )
             }
             items(state) { city ->
-                CityItem(city = city) {
-                    viewModel.selectCity(it)
-                }
+                CityItem(
+                    city = city,
+                    onClick = {
+                        viewModel.selectCity(it)
+                    },
+                    onSeeDetails = {
+
+                    },
+                    onMarkAsFavorite = {
+                        viewModel.markAsFavorite(city)
+                    }
+                )
             }
         }
 

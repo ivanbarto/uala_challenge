@@ -3,15 +3,15 @@ package com.ivanbarto.challenge.presentation.cities.viewModels
 import androidx.lifecycle.viewModelScope
 import com.ivanbarto.challenge.presentation.base.BaseViewModel
 import com.ivanbarto.challenge.presentation.base.UiState
-import com.ivanbarto.domain.cities.interactors.CityInteractor
-import com.ivanbarto.domain.cities.models.City
+import com.ivanbarto.domain_cities.City
+import com.ivanbarto.domain_cities.CityInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewModel() {
 
@@ -21,25 +21,44 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     private val _selectedCity: MutableStateFlow<City?> = MutableStateFlow(null)
     val selectedCity: StateFlow<City?> = _selectedCity.asStateFlow()
 
+    private val _cities: MutableStateFlow<List<City>> = MutableStateFlow(emptyList())
+    val cities: StateFlow<List<City>> =
+        _cities.asStateFlow().combine(cityNameFilter) { citiesToFilter, filterValue ->
+            filterCities(citiesToFilter, filterValue)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val cities: StateFlow<List<City>> = flow {
-        setUiState(UiState.LOADING)
-
-        try {
-            val result = cityInteractor.cities()
-            setUiState(UiState.IDLE)
-            emit(result)
-        } catch (e: Exception) {
-            setUiState(UiState.ERROR)
-        }
-    }.combine(cityNameFilter) { result, filterValue ->
-        result.filter {
-            (it.name + it.country).startsWith(
-                filterValue,
+    private fun filterCities(
+        citiesToFilter: List<City>,
+        filterValue: String
+    ) = citiesToFilter.filter {
+        (it.name.replace(" ", "") + it.country)
+            .startsWith(
+                filterValue
+                    .replace(",", "")
+                    .replace(" ", ""),
                 ignoreCase = true
             )
+    }
+
+    init {
+        loadCities()
+    }
+
+    private fun loadCities() {
+        viewModelScope.launch {
+            try {
+                setUiState(UiState.LOADING)
+
+                _cities.value = cityInteractor.cities()
+                cityInteractor.fetchCities()
+                _cities.value = cityInteractor.cities()
+
+                setUiState(UiState.IDLE)
+            } catch (e: Exception) {
+                setUiState(UiState.ERROR)
+            }
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    }
 
     fun filterCityByName(name: String) {
         _cityNameFilter.value = name
@@ -47,5 +66,15 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
 
     fun selectCity(city: City) {
         _selectedCity.value = city
+    }
+
+    fun markAsFavorite(city: City) {
+        viewModelScope.launch {
+            setUiState(UiState.LOADING)
+            cityInteractor.markCityAsFavorite(city.copy(savedAsFavourite = city.savedAsFavourite.not()))
+
+            _cities.value = cityInteractor.cities()
+            setUiState(UiState.IDLE)
+        }
     }
 }

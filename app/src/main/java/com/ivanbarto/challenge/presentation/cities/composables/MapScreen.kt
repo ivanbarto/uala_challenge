@@ -9,7 +9,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.ivanbarto.domain.cities.models.City
+import com.ivanbarto.domain_cities.City
 import org.koin.core.time.inMs
 import kotlin.time.Duration.Companion.seconds
 

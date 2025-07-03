@@ -58,6 +58,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.koin.androidx.compose.navigation)
-    implementation(project(":domain:cities"))
     implementation(libs.maps.compose)
+    implementation(project(":domain-cities"))
+    implementation(project(":data-cities"))
 }

@@ -1,5 +1,7 @@
 package com.ivanbarto.data.cities.repository
 
+import com.ivanbarto.data.cities.datasource.local.database.Database
+import com.ivanbarto.data.cities.datasource.local.database.entities.CityEntity
 import com.ivanbarto.data.cities.datasource.remote.CitiesApi
 import com.ivanbarto.data.cities.datasource.remote.dto.CityDto
 import com.ivanbarto.data.cities.koin.CitiesDataIsolatedKoinComponent
@@ -10,6 +12,8 @@ class CityRepositoryImpl: CityRepository, CitiesDataIsolatedKoinComponent {
     private val citiesApi: CitiesApi by inject()
 
     override suspend fun cities(): List<CityDto> {
-        return citiesApi.cities()
+        val results = citiesApi.cities()
+        Database.provideDataBase().getCityDao().insertAllCities(listOf(CityEntity(id = "1")))
+        return results
     }
 }
