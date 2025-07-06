@@ -37,7 +37,7 @@ fun DynamicMapScreen(city: City?, modifier: Modifier) {
     }
 
     GoogleMap(
-        modifier = modifier.testTag(TestTag.MAP_SCREEN),
+        modifier = modifier.testTag(TestTag.DYNAMIC_MAP_SCREEN),
         cameraPositionState = cameraPositionState
     ) {
         city?.let {
@@ -61,7 +61,7 @@ fun StaticMapScreen(city: City, modifier: Modifier) {
     }
 
     GoogleMap(
-        modifier = modifier.testTag(TestTag.MAP_SCREEN),
+        modifier = modifier.testTag(TestTag.STATIC_MAP_SCREEN),
         cameraPositionState = cameraPositionState,
         uiSettings = MapUiSettings(
             myLocationButtonEnabled = false,

@@ -28,6 +28,7 @@ navigationCommonAndroid = "2.9.1"
 monitor = "1.7.2"
 sqliteBundledAndroid = "2.5.2"
 espressoDevice = "1.0.1"
+navigationTestingAndroid = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,7 @@ androidx-navigation-common-android = { group = "androidx.navigation", name = "na
 androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 androidx-sqlite-bundled-android = { group = "androidx.sqlite", name = "sqlite-bundled-android", version.ref = "sqliteBundledAndroid" }
 androidx-espresso-device = { group = "androidx.test.espresso", name = "espresso-device", version.ref = "espressoDevice" }
+androidx-navigation-testing-android = { group = "androidx.navigation", name = "navigation-testing-android", version.ref = "navigationTestingAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
