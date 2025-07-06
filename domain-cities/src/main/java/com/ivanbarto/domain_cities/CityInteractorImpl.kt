@@ -5,7 +5,7 @@ import com.ivanbarto.data_cities.repository.CityRepository
 class CityInteractorImpl(private val cityRepository: CityRepository) : CityInteractor {
 
     override suspend fun cities(): List<City> =
-        cityRepository.cities().map { it.toDomain() }.sortedBy { it.name + it.country }
+        cityRepository.cities().map { it.toDomain() }
 
     override suspend fun fetchCities() {
         cityRepository.fetchCities()

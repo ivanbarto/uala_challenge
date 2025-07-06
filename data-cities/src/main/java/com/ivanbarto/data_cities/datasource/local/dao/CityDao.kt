@@ -11,7 +11,7 @@ import com.ivanbarto.data_cities.datasource.local.entities.CityEntity
 @Dao
 interface CityDao {
 
-    @Query("SELECT * FROM ${Constants.CITIES_TABLE}")
+    @Query("SELECT * FROM ${Constants.CITIES_TABLE} ORDER BY name || country")
     suspend fun getCities(): List<CityEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
