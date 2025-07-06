@@ -8,7 +8,11 @@ data class City(
     val id: String = "",
     val coordinate: Coordinate = Coordinate(),
     val savedAsFavourite: Boolean = false
-)
+) {
+    override fun toString(): String {
+        return "$name, $country"
+    }
+}
 
 fun CityDto.toDomain(): City = City(
     country = country.orEmpty(),

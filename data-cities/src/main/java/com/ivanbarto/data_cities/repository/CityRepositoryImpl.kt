@@ -11,6 +11,8 @@ class CityRepositoryImpl(private val citiesApi: CitiesApi, private val dao: City
 
     override suspend fun cities(): List<CityDto> = dao.getCities().map { it.toDto() }
 
+    override suspend fun city(id: String): CityDto = dao.getCity(id).toDto()
+
     override suspend fun fetchCities() {
         val cities = citiesApi.cities()
         dao.insertAll(cities.map { it.toEntity() })

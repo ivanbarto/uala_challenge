@@ -7,6 +7,8 @@ class CityInteractorImpl(private val cityRepository: CityRepository) : CityInter
     override suspend fun cities(): List<City> =
         cityRepository.cities().map { it.toDomain() }
 
+    override suspend fun city(id: String): City = cityRepository.city(id).toDomain()
+
     override suspend fun fetchCities() {
         cityRepository.fetchCities()
     }

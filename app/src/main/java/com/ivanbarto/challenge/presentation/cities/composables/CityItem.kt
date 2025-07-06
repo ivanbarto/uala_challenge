@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ivanbarto.challenge.R
+import com.ivanbarto.challenge.ui.theme.Purple40
 import com.ivanbarto.challenge.ui.theme.Typography
 import com.ivanbarto.domain_cities.City
 
@@ -33,13 +36,13 @@ import com.ivanbarto.domain_cities.City
 fun CityItem(
     city: City,
     onClick: (city: City) -> Unit,
-    onSeeDetails: (city: City) -> Unit,
+    onSeeDetails: () -> Unit,
     onMarkAsFavorite: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(10.dp)
             .clickable {
                 onClick.invoke(city)
@@ -48,13 +51,26 @@ fun CityItem(
     ) {
         CityTitle(city = city)
         CityCoordinates(city = city)
-        SeeDetailsButton(city = city, onMarkAsFavorite)
+
+        Row(
+            modifier = Modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .width(0.dp)
+                    .weight(1f)
+            )
+            MarkAsFavoriteButton(city.savedAsFavourite, onMarkAsFavorite)
+            SeeDetailsButton(onSeeDetails)
+        }
     }
 }
 
 @Composable
 fun CityTitle(city: City) {
-    Text(text = "${city.name}, ${city.country}", style = Typography.titleMedium)
+    Text(text = city.toString(), style = Typography.titleMedium)
 }
 
 @Composable
@@ -70,22 +86,15 @@ fun CityCoordinates(city: City) {
 }
 
 @Composable
-fun SeeDetailsButton(city: City, onMarkAsFavorite: () -> Unit) {
-    Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-        MarkAsFavoriteButton(city.savedAsFavourite, onMarkAsFavorite)
-        Spacer(
-            Modifier
-                .width(0.dp)
-                .weight(1f)
-        )
-        Button(
-            onClick = {
-
-            },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text("See Details")
-        }
+fun SeeDetailsButton(onSeeDetails: () -> Unit) {
+    Button(
+        colors = ButtonDefaults.buttonColors(containerColor = Purple40),
+        onClick = {
+            onSeeDetails.invoke()
+        },
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Text("See Details")
     }
 }
 

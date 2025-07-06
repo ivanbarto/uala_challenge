@@ -3,8 +3,8 @@ package com.ivanbarto.domain_cities
 import com.ivanbarto.data_cities.datasource.remote.dto.CoordinateDto
 
 data class Coordinate(
-    val lon: String = "",
-    val lat: String = ""
+    val lon: String = "0.0",
+    val lat: String = "0.0"
 )
 
 fun CoordinateDto.toDomain(): Coordinate = Coordinate(
