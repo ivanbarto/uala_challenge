@@ -3,12 +3,14 @@ package com.ivanbarto.challenge.presentation.cities.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.ivanbarto.challenge.tools.TestTag
 import com.ivanbarto.domain_cities.City
 import org.koin.core.time.inMs
 import kotlin.time.Duration.Companion.seconds
@@ -34,7 +36,7 @@ fun MapScreen(city: City?, modifier: Modifier) {
     }
 
     GoogleMap(
-        modifier = modifier,
+        modifier = modifier.testTag(TestTag.MAP_SCREEN),
         cameraPositionState = cameraPositionState
     ) {
         city?.let {

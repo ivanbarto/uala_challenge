@@ -5,16 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testMyModules()">
+      <SelectionState runConfigName="ExampleInstrumentedTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="database_register_cities()">
+      <SelectionState runConfigName="myTest2()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DatabaseTest">
+      <SelectionState runConfigName="on_screen_appear_cities_are_displayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="database_marks_city_as_favourite()">
+      <SelectionState runConfigName="on_screen_portrait_map_is_hidden()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="on_city_filter_list_changes()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

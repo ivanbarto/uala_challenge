@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,17 +19,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.viewModels.CitiesViewModel
+import com.ivanbarto.challenge.tools.TestTag
 import com.ivanbarto.challenge.ui.theme.Typography
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,6 +50,7 @@ fun CitiesScreen() {
         Row {
             LazyColumn(
                 modifier = Modifier
+                    .testTag(TestTag.CITY_LIST)
                     .width(0.dp)
                     .weight(1f)
                     .fillMaxHeight()
@@ -59,7 +59,7 @@ fun CitiesScreen() {
             ) {
                 stickyHeader {
                     SearchBar(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp).testTag(TestTag.CITY_SEARCH_BAR),
                         inputField = {
                             SearchBarDefaults.InputField(
                                 query = cityNameFilter,
@@ -74,6 +74,7 @@ fun CitiesScreen() {
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Checkbox(
+                                            modifier = Modifier.testTag(TestTag.CITY_FILTER_CHECK_BOX),
                                             checked = filterFavorites,
                                             onCheckedChange = {
                                                 viewModel.filterFavorites(filterFavorites.not())
