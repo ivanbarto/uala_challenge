@@ -10,4 +10,4 @@ private val modules = module {
     viewModelOf(::CitiesViewModel)
 }
 
-fun getCitiesPresentationModules() = listOf(modules)
+fun citiesPresentationModules() = listOf(modules)

@@ -34,7 +34,7 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
                 if (shouldFilter) citiesToFilter.filter { it.savedAsFavourite } else citiesToFilter
             }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    private fun filterCities(
+    fun filterCities(
         citiesToFilter: List<City>,
         filterValue: String
     ) = citiesToFilter.filter {

@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.maps.compose)
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.mockk)
     implementation(project(":domain-cities"))
     implementation(project(":data-cities"))
 }
