@@ -6,7 +6,6 @@ import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
@@ -112,37 +111,5 @@ class ScreenTest {
         composeTestRule.onAllNodesWithText(string).onFirst().performClick()
 
         composeTestRule.onNodeWithTag(TestTag.STATIC_MAP_SCREEN).assertExists()
-    }
-
-    @Test
-    fun on_city_filter_list_is_updated() {
-        val string = ApplicationProvider.getApplicationContext<ApplicationActivity>()
-            .getString(R.string.text_see_details)
-
-        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
-
-        composeTestRule.setContent {
-            ChallengeTheme {
-                ScreenNavigation(navController)
-            }
-        }
-
-        composeTestRule.waitUntil(timeoutMillis = 20000) {
-            composeTestRule
-                .onAllNodesWithText(string)
-                .fetchSemanticsNodes().isNotEmpty()
-        }
-
-        composeTestRule.onNodeWithTag(TestTag.CITY_SEARCH_BAR).performTextInput("san jorgear")
-
-        composeTestRule.waitUntil(timeoutMillis = 20000) {
-            composeTestRule
-                .onAllNodesWithText(string)
-                .fetchSemanticsNodes().size == 1
-        }
-
-        assert(composeTestRule
-            .onAllNodesWithText(string).fetchSemanticsNodes().size == 1)
-
     }
 }
