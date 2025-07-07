@@ -1,4 +1,4 @@
-# Ualá Technicall Test
+# Mobile Challenge - Ualá - v0.8
 First of all, I would like to thank Ualá for this great opportunity! It has been fun to develop this solution.
 I hope you like the end result!
 
