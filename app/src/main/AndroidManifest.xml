@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Challenge"
         tools:targetApi="31">
+
+        <!-- This should be part of a local gradle.properties file,
+            but for avoid asking the reviewers to implement a local file,
+             I've hardcoded it here -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgIBwOuq5omA4SdxO0OYF-3gyGf_8kjbQ" />
