@@ -43,5 +43,6 @@ dependencies {
 
     implementation(libs.koin.android)
     implementation(project(":data-cities"))
-
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.mockk)
 }
