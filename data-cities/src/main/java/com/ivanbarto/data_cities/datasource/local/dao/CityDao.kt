@@ -36,10 +36,10 @@ interface CityDao {
     @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE savedAsFavourite == 1")
     suspend fun getFavoriteCitiesFilter(): List<PaginatedCityEntity>
 
-    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE savedAsFavourite == 1 AND name || country LIKE :prefix")
+    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE savedAsFavourite == 1 AND LOWER(name || country) LIKE :prefix")
     suspend fun getFavoriteCitiesByPrefixFilter(prefix: String): List<PaginatedCityEntity>
 
-    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE name || country LIKE :prefix")
+    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE LOWER(name || country) LIKE :prefix")
     suspend fun getCitiesByPrefixFilter(prefix: String): List<PaginatedCityEntity>
 
     @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE_FILTER} WHERE  page == :page AND savedAsFavourite == 1")
@@ -48,6 +48,6 @@ interface CityDao {
     @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE_FILTER} WHERE page == :page AND savedAsFavourite == 1 AND name || country LIKE :prefix")
     suspend fun getFavoriteCitiesByPrefix(page: Int, prefix: String): List<PaginatedCityEntity>
 
-    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE_FILTER} WHERE page == :page AND name || country LIKE :prefix")
+    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE_FILTER} WHERE page == :page AND LOWER(name || country) LIKE :prefix")
     suspend fun getCitiesByPrefix(page: Int, prefix: String): List<PaginatedCityEntity>
 }

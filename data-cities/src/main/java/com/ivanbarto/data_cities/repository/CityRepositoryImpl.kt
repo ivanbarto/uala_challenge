@@ -23,15 +23,27 @@ class CityRepositoryImpl(
         dao.getPaginatedCities(page).map { it.toDto() }
 
     override suspend fun getCitiesByPrefix(page: Int, prefix: String): List<CityDto> {
-        val results = dao.getCitiesByPrefixFilter("$prefix%").map { it.toFilter() }
+        val filter = prefix
+            .lowercase()
+            .replace(", ", "")
+            .replace(",", "")
+
+        val results = dao.getCitiesByPrefixFilter("$filter%").map { it.toFilter() }
         clearAndUpdateFilters(results)
-        return dao.getCitiesByPrefix(page, "$prefix%").map { it.toDto() }
+
+        return dao.getCitiesByPrefix(page, "$filter%").map { it.toDto() }
     }
 
     override suspend fun getFavoriteCitiesByPrefix(page: Int, prefix: String): List<CityDto> {
-        val results = dao.getFavoriteCitiesByPrefixFilter("$prefix%").map { it.toFilter() }
+        val filter = prefix
+            .lowercase()
+            .replace(", ", "")
+            .replace(",", "")
+
+        val results = dao.getFavoriteCitiesByPrefixFilter("$filter%").map { it.toFilter() }
         clearAndUpdateFilters(results)
-        return dao.getFavoriteCitiesByPrefix(page, "$prefix%").map { it.toDto() }
+
+        return dao.getFavoriteCitiesByPrefix(page, "$filter%").map { it.toDto() }
     }
 
     override suspend fun getFavoriteCities(page: Int): List<CityDto> {
