@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
@@ -33,6 +32,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ivanbarto.challenge.R
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.navigation.CitiesScreens
@@ -50,7 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CitiesScreen(navController: NavController) {
     val viewModel: CitiesViewModel = koinViewModel()
 
-    val state = viewModel.cities.collectAsState().value
+    val state = viewModel.cities.collectAsLazyPagingItems()
     val screenState = viewModel.uiState.collectAsState().value
     val cityNameFilter = viewModel.cityNameFilter.collectAsState().value
     val filterFavorites = viewModel.filterFavorites.collectAsState().value
@@ -86,7 +87,10 @@ fun CitiesScreen(navController: NavController) {
                             inputField = {
                                 SearchBarDefaults.InputField(
                                     query = cityNameFilter,
-                                    onQueryChange = { viewModel.filterCityByName(it) },
+                                    onQueryChange = {
+                                        viewModel.filterCityByName(it)
+                                        state.refresh()
+                                    },
                                     onSearch = { },
                                     expanded = false,
                                     onExpandedChange = { },
@@ -112,6 +116,7 @@ fun CitiesScreen(navController: NavController) {
                                                 checked = filterFavorites,
                                                 onCheckedChange = {
                                                     viewModel.filterFavorites(filterFavorites.not())
+                                                    state.refresh()
                                                 }
                                             )
                                             Text(
@@ -131,22 +136,31 @@ fun CitiesScreen(navController: NavController) {
                         )
                     }
 
-                    items(state) { city ->
-                        CityItem(
-                            city = city,
-                            onClick = {
-                                viewModel.selectCity(it)
-                            },
-                            onSeeDetails = {
-                                CitiesScreens.CityDetails.navigate(
-                                    navController = navController,
-                                    argument = city.id
-                                )
-                            },
-                            onMarkAsFavorite = {
-                                viewModel.markAsFavorite(city)
-                            }
+                    stickyHeader {
+                        Text(
+                            text =
+                                "ITEMS COUNT: ${state.itemSnapshotList.items.count()}"
                         )
+                    }
+
+                    items(state.itemCount) { index ->
+                        state[index]?.let { city ->
+                            CityItem(
+                                city = city,
+                                onClick = {
+                                    viewModel.selectCity(it)
+                                },
+                                onSeeDetails = {
+                                    CitiesScreens.CityDetails.navigate(
+                                        navController = navController,
+                                        argument = city.id
+                                    )
+                                },
+                                onMarkAsFavorite = {
+                                    viewModel.markAsFavorite(city)
+                                }
+                            )
+                        }
                     }
                 }
 
@@ -159,7 +173,10 @@ fun CitiesScreen(navController: NavController) {
                     )
                 }
             }
-            if (screenState == UiState.LOADING) {
+            if (screenState == UiState.LOADING ||
+                state.loadState.append == LoadState.Loading ||
+                state.loadState.refresh == LoadState.Loading
+            ) {
                 CircularProgressIndicator(color = Purple40)
             }
         }

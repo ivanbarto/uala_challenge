@@ -22,6 +22,8 @@ fun CityDto.toDomain(): City = City(
     savedAsFavourite = savedAsFavourite
 )
 
+
+
 fun City.toDto(): CityDto = CityDto(
     country = country,
     name = name,

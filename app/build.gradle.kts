@@ -71,4 +71,7 @@ dependencies {
     testImplementation(libs.mockk)
     implementation(project(":domain-cities"))
     implementation(project(":data-cities"))
+
+    implementation (libs.androidx.paging.runtime.ktx)
+    implementation (libs.androidx.paging.compose)
 }

@@ -8,8 +8,9 @@ import androidx.room.TypeConverters
 import com.ivanbarto.data_cities.datasource.local.dao.CityDao
 import com.ivanbarto.data_cities.datasource.local.entities.CityEntity
 import com.ivanbarto.data_cities.datasource.local.entities.Converters
+import com.ivanbarto.data_cities.datasource.local.entities.PaginatedCityEntity
 
-@Database(entities = [(CityEntity::class)], version = 1, exportSchema = false)
+@Database(entities = [(CityEntity::class), (PaginatedCityEntity::class)], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class CityDataBase : RoomDatabase() {
     abstract fun getCityDao(): CityDao
