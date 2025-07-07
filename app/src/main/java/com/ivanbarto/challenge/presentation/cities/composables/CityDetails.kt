@@ -24,11 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ivanbarto.challenge.R
 import com.ivanbarto.challenge.presentation.cities.viewModels.CityDetailsViewModel
+import com.ivanbarto.challenge.ui.theme.Dimensions
 import com.ivanbarto.challenge.ui.theme.PurpleBackground
 import com.ivanbarto.challenge.ui.theme.Typography
 import org.koin.androidx.compose.koinViewModel
@@ -55,7 +57,7 @@ fun CityDetailsScreen(navController: NavController, cityId: String) {
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(Dimensions.paddingLarge)
             ) {
                 Box(contentAlignment = Alignment.TopStart) {
                     StaticMapScreen(
@@ -67,20 +69,20 @@ fun CityDetailsScreen(navController: NavController, cityId: String) {
 
                     Box(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(Dimensions.paddingSmall)
                             .background(color = Color.White, shape = CircleShape)
                             .clip(CircleShape)
                             .clickable {
                                 navController.navigateUp()
                             }
-                            .padding(4.dp),
+                            .padding(Dimensions.paddingXSmall),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_chevron_left),
                             colorFilter = ColorFilter.tint(color = Color.Gray),
-                            modifier = Modifier.size(32.dp),
-                            contentDescription = "back to home"
+                            modifier = Modifier.size(Dimensions.iconSizeLarge),
+                            contentDescription = stringResource(R.string.text_back_home)
                         )
                     }
                 }

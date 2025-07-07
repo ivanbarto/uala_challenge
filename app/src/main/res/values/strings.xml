@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Challenge</string>
+
+    <string name="text_button_favorite_mark">Mark as Favorite</string>
+    <string name="text_button_favorite_unmark">Unmark Favorite</string>
+    <string name="text_see_details">See Details</string>
+    <string name="text_back_home">Back Home</string>
+    <string name="text_search_city">Search for a city…</string>
+    <string name="text_favorites">Favorites</string>
 </resources>

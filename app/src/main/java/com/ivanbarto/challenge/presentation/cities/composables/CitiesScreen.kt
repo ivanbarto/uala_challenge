@@ -30,13 +30,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ivanbarto.challenge.R
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.navigation.CitiesScreens
 import com.ivanbarto.challenge.presentation.cities.navigation.navigate
 import com.ivanbarto.challenge.presentation.cities.viewModels.CitiesViewModel
 import com.ivanbarto.challenge.tools.TestTag
+import com.ivanbarto.challenge.ui.theme.Dimensions
 import com.ivanbarto.challenge.ui.theme.Purple40
 import com.ivanbarto.challenge.ui.theme.PurpleBackground
 import com.ivanbarto.challenge.ui.theme.Typography
@@ -70,15 +73,15 @@ fun CitiesScreen(navController: NavController) {
                         .width(0.dp)
                         .weight(1f)
                         .fillMaxHeight()
-                        .padding(horizontal = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = Dimensions.paddingSmall),
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.paddingXSmall)
                 ) {
                     stickyHeader {
                         SearchBar(
                             colors = SearchBarDefaults.colors(containerColor = Color.White),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 24.dp)
+                                .padding(bottom = Dimensions.paddingXLarge)
                                 .testTag(TestTag.CITY_SEARCH_BAR),
                             inputField = {
                                 SearchBarDefaults.InputField(
@@ -89,7 +92,7 @@ fun CitiesScreen(navController: NavController) {
                                     onExpandedChange = { },
                                     placeholder = {
                                         Text(
-                                            "Search a city",
+                                            stringResource(R.string.text_search_city),
                                             style = Typography.bodyMedium
                                         )
                                     },
@@ -112,8 +115,8 @@ fun CitiesScreen(navController: NavController) {
                                                 }
                                             )
                                             Text(
-                                                modifier = Modifier.padding(end = 8.dp),
-                                                text = "Favorites",
+                                                modifier = Modifier.padding(end = Dimensions.paddingSmall),
+                                                text = stringResource(R.string.text_favorites),
                                                 style = Typography.bodyMedium.copy(
                                                     color = if (filterFavorites) Purple40 else Typography.bodyMedium.color
                                                 )

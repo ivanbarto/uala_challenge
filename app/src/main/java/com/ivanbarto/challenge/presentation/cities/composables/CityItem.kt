@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,9 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ivanbarto.challenge.R
+import com.ivanbarto.challenge.ui.theme.Dimensions
 import com.ivanbarto.challenge.ui.theme.Purple40
 import com.ivanbarto.challenge.ui.theme.Typography
 import com.ivanbarto.domain_cities.City
@@ -42,12 +43,12 @@ fun CityItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(10.dp)
+            .background(Color.White, shape = RoundedCornerShape(Dimensions.paddingSmall))
+            .padding(Dimensions.paddingMedium)
             .clickable {
                 onClick.invoke(city)
             },
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimensions.paddingXSmall)
     ) {
         CityTitle(city = city)
         CityCoordinates(city = city)
@@ -55,7 +56,7 @@ fun CityItem(
         Row(
             modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.paddingSmall)
         ) {
             Spacer(
                 modifier = Modifier
@@ -78,10 +79,10 @@ fun CityCoordinates(city: City) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.ic_map_pin),
-            modifier = Modifier.size(18.dp),
+            modifier = Modifier.size(Dimensions.iconSizeSmall),
             contentDescription = null
         )
-        Text(text = "${city.coordinate.lat}, ${city.coordinate.lat}", style = Typography.bodyMedium)
+        Text(text = city.coordinate.toString(), style = Typography.bodyMedium)
     }
 }
 
@@ -92,9 +93,9 @@ fun SeeDetailsButton(onSeeDetails: () -> Unit) {
         onClick = {
             onSeeDetails.invoke()
         },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(Dimensions.paddingSmall)
     ) {
-        Text("See Details")
+        Text(stringResource(R.string.text_see_details))
     }
 }
 
@@ -107,14 +108,24 @@ fun MarkAsFavoriteButton(isMarked: Boolean, onClick: () -> Unit) {
             .clickable {
                 onClick.invoke()
             }
-            .padding(4.dp),
+            .padding(Dimensions.paddingXSmall),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            imageVector = ImageVector.vectorResource(if (isMarked) R.drawable.ic_favorite_filled else R.drawable.ic_favorite),
+            imageVector = ImageVector.vectorResource(
+                if (isMarked)
+                    R.drawable.ic_favorite_filled
+                else
+                    R.drawable.ic_favorite
+            ),
             colorFilter = ColorFilter.tint(color = Color.Red),
-            modifier = Modifier.size(24.dp),
-            contentDescription = if (isMarked) "Unmark Favorite" else "Mark as Favorite"
+            modifier = Modifier.size(Dimensions.iconSizeMedium),
+            contentDescription =
+                if (isMarked)
+                    stringResource(R.string.text_button_favorite_unmark)
+                else stringResource(
+                    R.string.text_button_favorite_mark
+                )
         )
     }
 }
