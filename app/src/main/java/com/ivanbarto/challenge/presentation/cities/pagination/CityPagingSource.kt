@@ -33,15 +33,25 @@ class CityPagingSource(
 
             val results = when {
                 filterFavorites -> {
-                    if (prefix.isNotEmpty()) {
-                        cityInteractor.favoriteCitiesByPrefix(prefix)
+                    val paginatedCities = if (prefix.isNotEmpty()) {
+                        cityInteractor.favoriteCitiesByPrefix(page, prefix)
                     } else {
-                        cityInteractor.favoriteCities()
+                        cityInteractor.favoriteCities(page)
                     }
+
+                    prevKey = if (page == 1) null else page.minus(1)
+                    nextKey = if (paginatedCities.isEmpty()) null else page.plus(1)
+
+                    paginatedCities
                 }
 
                 prefix.isNotEmpty() -> {
-                    cityInteractor.citiesByPrefix(prefix)
+                    val paginatedCities = cityInteractor.citiesByPrefix(page, prefix)
+
+                    prevKey = if (page == 1) null else page.minus(1)
+                    nextKey = if (paginatedCities.isEmpty()) null else page.plus(1)
+
+                    paginatedCities
                 }
 
                 else -> {

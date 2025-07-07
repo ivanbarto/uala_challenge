@@ -7,14 +7,14 @@ class CityInteractorImpl(private val cityRepository: CityRepository) : CityInter
     override suspend fun paginatedCities(page: Int): List<City> =
         cityRepository.citiesPaginated(page = page).map { it.toDomain() }
 
-    override suspend fun favoriteCities(): List<City> =
-        cityRepository.getFavoriteCities().map { it.toDomain() }
+    override suspend fun favoriteCities(page: Int): List<City> =
+        cityRepository.getFavoriteCities(page).map { it.toDomain() }
 
-    override suspend fun favoriteCitiesByPrefix(prefix: String): List<City> =
-        cityRepository.getFavoriteCitiesByPrefix(prefix).map { it.toDomain() }
+    override suspend fun favoriteCitiesByPrefix(page: Int, prefix: String): List<City> =
+        cityRepository.getFavoriteCitiesByPrefix(page, prefix).map { it.toDomain() }
 
-    override suspend fun citiesByPrefix(prefix: String): List<City> =
-        cityRepository.getCitiesByPrefix(prefix).map { it.toDomain() }
+    override suspend fun citiesByPrefix(page: Int, prefix: String): List<City> =
+        cityRepository.getCitiesByPrefix(page, prefix).map { it.toDomain() }
 
     override suspend fun city(id: String): City = cityRepository.city(id).toDomain()
 

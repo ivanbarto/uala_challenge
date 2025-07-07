@@ -3,38 +3,65 @@ package com.ivanbarto.data_cities.repository
 import androidx.room.withTransaction
 import com.ivanbarto.data_cities.datasource.local.CityDataBase
 import com.ivanbarto.data_cities.datasource.local.dao.CityDao
+import com.ivanbarto.data_cities.datasource.local.entities.PaginatedCityEntityFilter
 import com.ivanbarto.data_cities.datasource.local.entities.toDto
+import com.ivanbarto.data_cities.datasource.local.entities.toFilter
 import com.ivanbarto.data_cities.datasource.remote.CitiesApi
 import com.ivanbarto.data_cities.datasource.remote.dto.CityDto
 import com.ivanbarto.data_cities.datasource.remote.dto.toPaginatedEntity
 
 private const val PAGE_SIZE = 40
 
-class CityRepositoryImpl(private val citiesApi: CitiesApi,private val dataBase: CityDataBase, private val dao: CityDao) :
+class CityRepositoryImpl(
+    private val citiesApi: CitiesApi,
+    private val dataBase: CityDataBase,
+    private val dao: CityDao
+) :
     CityRepository {
 
     override suspend fun citiesPaginated(page: Int): List<CityDto> =
         dao.getPaginatedCities(page).map { it.toDto() }
 
-    override suspend fun getCitiesByPrefix(prefix: String): List<CityDto> =
-        dao.getCitiesByPrefix("$prefix%").map { it.toDto() }
+    override suspend fun getCitiesByPrefix(page: Int, prefix: String): List<CityDto> {
+        val results = dao.getCitiesByPrefixFilter("$prefix%").map { it.toFilter() }
+        clearAndUpdateFilters(results)
+        return dao.getCitiesByPrefix(page, "$prefix%").map { it.toDto() }
+    }
 
-    override suspend fun getFavoriteCitiesByPrefix(prefix: String): List<CityDto> =
-        dao.getFavoriteCitiesByPrefix("$prefix%").map { it.toDto() }
+    override suspend fun getFavoriteCitiesByPrefix(page: Int, prefix: String): List<CityDto> {
+        val results = dao.getFavoriteCitiesByPrefixFilter("$prefix%").map { it.toFilter() }
+        clearAndUpdateFilters(results)
+        return dao.getFavoriteCitiesByPrefix(page, "$prefix%").map { it.toDto() }
+    }
 
-    override suspend fun getFavoriteCities(): List<CityDto> =
-        dao.getFavoriteCities().map { it.toDto() }
+    override suspend fun getFavoriteCities(page: Int): List<CityDto> {
+        val results = dao.getFavoriteCitiesFilter().map { it.toFilter() }
+        clearAndUpdateFilters(results)
+        return dao.getFavoriteCities(page).map { it.toDto() }
+    }
+
+    private suspend fun clearAndUpdateFilters(filters: List<PaginatedCityEntityFilter>) {
+        dao.clearAllPaginatedFilter()
+        filters.chunked(PAGE_SIZE).forEachIndexed { page, cityPage ->
+            dataBase.withTransaction {
+                dao.insertAllPaginatedFilter(cityPage.map { it.copy(page = page.inc()) })
+            }
+        }
+    }
+
 
     override suspend fun city(id: String): CityDto = dao.getCity(id).toDto()
 
     override suspend fun fetchPaginatedCities() {
-        if (dao.isTableEmpty()){
+        if (dao.isTableEmpty()) {
             val cities = citiesApi.cities()
                 .sortedBy { it.name.orEmpty() + it.country.orEmpty() }
 
             cities.chunked(PAGE_SIZE).forEachIndexed { page, cityPage ->
                 dataBase.withTransaction {
-                    dao.insertAllPaginated(cityPage.map { it.copy(page = page.inc()).toPaginatedEntity() })
+                    dao.insertAllPaginated(cityPage.map {
+                        it.copy(page = page.inc()).toPaginatedEntity()
+                    })
                 }
             }
         }
