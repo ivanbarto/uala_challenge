@@ -7,4 +7,5 @@
     <string name="text_back_home">Back Home</string>
     <string name="text_search_city">Search for a city…</string>
     <string name="text_favorites">Favorites</string>
+    <string name="text_error_refresh">An error happened. Click to refresh.</string>
 </resources>

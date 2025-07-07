@@ -241,6 +241,6 @@ fun RefreshButton(onClick: () -> Unit) {
             contentDescription = null
         )
 
-        Text("An error happened. Click to refresh.")
+        Text(stringResource(R.string.text_error_refresh))
     }
 }
