@@ -14,7 +14,7 @@ private val modules = module {
     single<CityDataBase> { Database.provideDataBase(androidContext()) }
     single<CityDao> { Database.provideDao(get()) }
     single<CitiesApi> { Client.citiesApi() }
-    single<CityRepository> { CityRepositoryImpl(get(), get()) }
+    single<CityRepository> { CityRepositoryImpl(get(),get(), get()) }
 }
 
 fun citiesDataModule() = listOf(modules)

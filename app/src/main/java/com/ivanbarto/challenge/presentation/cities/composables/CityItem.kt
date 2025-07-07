@@ -1,7 +1,9 @@
 package com.ivanbarto.challenge.presentation.cities.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +31,17 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ivanbarto.challenge.R
 import com.ivanbarto.challenge.ui.theme.Dimensions
+import com.ivanbarto.challenge.ui.theme.Pink80Dark
 import com.ivanbarto.challenge.ui.theme.Purple40
+import com.ivanbarto.challenge.ui.theme.PurpleBackgroundLight
+import com.ivanbarto.challenge.ui.theme.PurpleGrey80
 import com.ivanbarto.challenge.ui.theme.Typography
 import com.ivanbarto.domain_cities.City
 
 @Composable
 fun CityItem(
     city: City,
+    isSelected: Boolean,
     onClick: (city: City) -> Unit,
     onSeeDetails: () -> Unit,
     onMarkAsFavorite: () -> Unit
@@ -43,11 +49,21 @@ fun CityItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(Dimensions.paddingSmall))
-            .padding(Dimensions.paddingMedium)
             .clickable {
                 onClick.invoke(city)
-            },
+            }
+            .background(
+                color = if (isSelected) PurpleGrey80 else PurpleBackgroundLight,
+                shape = RoundedCornerShape(Dimensions.paddingSmall),
+            )
+            .border(
+                border = BorderStroke(
+                    width = Dimensions.borderStroke,
+                    color = if (isSelected) Pink80Dark else Color.Transparent
+                ),
+                shape = RoundedCornerShape(Dimensions.paddingSmall)
+            )
+            .padding(Dimensions.paddingMedium),
         verticalArrangement = Arrangement.spacedBy(Dimensions.paddingXSmall)
     ) {
         CityTitle(city = city)
@@ -103,7 +119,7 @@ fun SeeDetailsButton(onSeeDetails: () -> Unit) {
 fun MarkAsFavoriteButton(isMarked: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .background(color = Color.White, shape = CircleShape)
+            .background(color = Color.Transparent, shape = CircleShape)
             .clip(CircleShape)
             .clickable {
                 onClick.invoke()

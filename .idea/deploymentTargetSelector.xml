@@ -5,19 +5,16 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="on_screen_appear_cities_are_displayed()">
+      <SelectionState runConfigName="cities_are_filtered_by_prefix_3()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="on_screen_portrait_map_is_hidden()">
+      <SelectionState runConfigName="cities_are_filtered()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="on_city_filter_list_changes()">
+      <SelectionState runConfigName="cities_are_filtered_with_favorites()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="on_see_details_click_navigation_is_performed()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="ScreenTest">
+      <SelectionState runConfigName="on_filter_cities_list_is_updated()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

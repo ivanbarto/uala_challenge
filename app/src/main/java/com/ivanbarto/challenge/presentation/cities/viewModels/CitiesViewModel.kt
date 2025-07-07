@@ -1,18 +1,21 @@
 package com.ivanbarto.challenge.presentation.cities.viewModels
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.ivanbarto.challenge.presentation.base.BaseViewModel
 import com.ivanbarto.challenge.presentation.base.UiState
+import com.ivanbarto.challenge.presentation.cities.pagination.CityPagingSource
+import com.ivanbarto.challenge.presentation.cities.pagination.PaginationConstants
 import com.ivanbarto.domain_cities.City
 import com.ivanbarto.domain_cities.CityInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+
 
 class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewModel() {
 
@@ -25,48 +28,22 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     private val _selectedCity: MutableStateFlow<City?> = MutableStateFlow(null)
     val selectedCity: StateFlow<City?> = _selectedCity.asStateFlow()
 
-    private val _cities: MutableStateFlow<List<City>> = MutableStateFlow(emptyList())
-    val cities: StateFlow<List<City>> =
-        _cities.asStateFlow()
-            .combine(cityNameFilter) { citiesToFilter, filterValue ->
-                filterCities(citiesToFilter, filterValue)
-            }.combine(filterFavorites) { citiesToFilter, shouldFilter ->
-                if (shouldFilter) citiesToFilter.filter { it.savedAsFavourite } else citiesToFilter
-            }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    fun filterCities(
-        citiesToFilter: List<City>,
-        filterValue: String
-    ) = citiesToFilter.filter {
-        (it.name.replace(" ", "") + it.country)
-            .startsWith(
-                filterValue
-                    .replace(",", "")
-                    .replace(" ", ""),
-                ignoreCase = true
+    val cities = Pager(
+        config = PagingConfig(
+            pageSize = PaginationConstants.PAGE_SIZE,
+        ),
+        pagingSourceFactory = {
+            CityPagingSource(
+                cityInteractor = cityInteractor,
+                filterFavorites = filterFavorites.value,
+                prefix = cityNameFilter.value
             )
-    }
-
-    init {
-        loadCities()
-    }
-
-    private fun loadCities() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                setUiState(UiState.LOADING)
-
-                _cities.value = cityInteractor.cities()
-
-                cityInteractor.fetchCities()
-                _cities.value = cityInteractor.cities()
-
-                setUiState(UiState.IDLE)
-            } catch (e: Exception) {
-                setUiState(UiState.ERROR)
-            }
         }
-    }
+    ).flow
+        .catch {
+            setUiState(UiState.ERROR)
+        }
+
 
     fun filterCityByName(name: String) {
         _cityNameFilter.value = name
@@ -81,7 +58,6 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
             setUiState(UiState.LOADING)
             cityInteractor.markCityAsFavorite(city.copy(savedAsFavourite = city.savedAsFavourite.not()))
 
-            _cities.value = cityInteractor.cities()
             setUiState(UiState.IDLE)
         }
     }
