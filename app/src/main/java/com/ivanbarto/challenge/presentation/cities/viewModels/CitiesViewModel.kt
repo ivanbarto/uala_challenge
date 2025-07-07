@@ -3,6 +3,8 @@ package com.ivanbarto.challenge.presentation.cities.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.ivanbarto.challenge.presentation.base.BaseViewModel
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.pagination.CityPagingSource
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 
@@ -40,10 +43,19 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
             )
         }
     ).flow
+        .cachedIn(viewModelScope)
+        .combine(cityInteractor.favoriteCities()) { pagingFlow, favoritesFlow ->
+            pagingFlow.map { city ->
+                city.copy(
+                    savedAsFavourite =
+                        favoritesFlow.firstOrNull { it.id == city.id } != null
+                )
+            }
+        }
         .catch {
             setUiState(UiState.ERROR)
         }
-
+        .cachedIn(viewModelScope)
 
     fun filterCityByName(name: String) {
         _cityNameFilter.value = name

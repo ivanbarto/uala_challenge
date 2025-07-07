@@ -9,6 +9,8 @@ import com.ivanbarto.data_cities.datasource.local.entities.toFilter
 import com.ivanbarto.data_cities.datasource.remote.CitiesApi
 import com.ivanbarto.data_cities.datasource.remote.dto.CityDto
 import com.ivanbarto.data_cities.datasource.remote.dto.toPaginatedEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 private const val PAGE_SIZE = 40
 
@@ -51,6 +53,9 @@ class CityRepositoryImpl(
         clearAndUpdateFilters(results)
         return dao.getFavoriteCities(page).map { it.toDto() }
     }
+
+    override fun getAllFavoriteCities(): Flow<List<CityDto>> =
+        dao.getAllFavoriteCities().map { it.map { entity -> entity.toDto() } }
 
     private suspend fun clearAndUpdateFilters(filters: List<PaginatedCityEntityFilter>) {
         dao.clearAllPaginatedFilter()

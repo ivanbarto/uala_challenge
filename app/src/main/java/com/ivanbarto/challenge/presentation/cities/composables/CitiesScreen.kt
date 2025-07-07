@@ -54,7 +54,6 @@ import com.ivanbarto.challenge.ui.theme.PurpleBackground
 import com.ivanbarto.challenge.ui.theme.Typography
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CitiesScreen(navController: NavController) {
     val viewModel: CitiesViewModel = koinViewModel()
@@ -116,7 +115,6 @@ fun CitiesScreen(navController: NavController) {
                                 },
                                 onMarkAsFavorite = {
                                     viewModel.markAsFavorite(city)
-                                    cities.refresh()
                                 }
                             )
                         }

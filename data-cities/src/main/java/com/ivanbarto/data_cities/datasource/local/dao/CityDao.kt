@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.ivanbarto.data_cities.datasource.local.Constants
 import com.ivanbarto.data_cities.datasource.local.entities.PaginatedCityEntity
 import com.ivanbarto.data_cities.datasource.local.entities.PaginatedCityEntityFilter
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CityDao {
@@ -32,6 +33,9 @@ interface CityDao {
 
     @Update
     suspend fun updateCity(city: PaginatedCityEntity)
+
+    @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE savedAsFavourite == 1")
+    fun getAllFavoriteCities(): Flow<List<PaginatedCityEntity>>
 
     @Query("SELECT * FROM ${Constants.CITIES_PAGINATED_TABLE} WHERE savedAsFavourite == 1")
     suspend fun getFavoriteCitiesFilter(): List<PaginatedCityEntity>

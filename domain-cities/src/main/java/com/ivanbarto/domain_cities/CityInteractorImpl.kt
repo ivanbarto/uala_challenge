@@ -1,6 +1,8 @@
 package com.ivanbarto.domain_cities
 
 import com.ivanbarto.data_cities.repository.CityRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class CityInteractorImpl(private val cityRepository: CityRepository) : CityInteractor {
 
@@ -9,6 +11,9 @@ class CityInteractorImpl(private val cityRepository: CityRepository) : CityInter
 
     override suspend fun favoriteCities(page: Int): List<City> =
         cityRepository.getFavoriteCities(page).map { it.toDomain() }
+
+    override fun favoriteCities(): Flow<List<City>> =
+        cityRepository.getAllFavoriteCities().map { it.map { dto -> dto.toDomain() } }
 
     override suspend fun favoriteCitiesByPrefix(page: Int, prefix: String): List<City> =
         cityRepository.getFavoriteCitiesByPrefix(page, prefix).map { it.toDomain() }
