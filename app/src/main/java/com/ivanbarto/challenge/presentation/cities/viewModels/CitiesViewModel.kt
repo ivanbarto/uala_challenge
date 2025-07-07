@@ -10,14 +10,9 @@ import com.ivanbarto.domain_cities.City
 import com.ivanbarto.domain_cities.CityInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.retry
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewModel() {
@@ -42,22 +37,6 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
                     .replace(" ", ""),
                 ignoreCase = true
             )
-    }
-
-    init {
-        loadCities()
-    }
-
-    private fun loadCities() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                setUiState(UiState.LOADING)
-//                cityInteractor.fetchCities()
-//                setUiState(UiState.IDLE)
-//            } catch (e: Exception) {
-//                setUiState(UiState.ERROR)
-//            }
-//        }
     }
 
     val cities = Pager(
