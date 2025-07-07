@@ -37,6 +37,11 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        emulatorControl {
+            enable = true
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +54,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.espresso.device)
+    implementation(libs.androidx.navigation.testing.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +63,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.maps.compose)
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.mockk)
+    implementation(project(":domain-cities"))
+    implementation(project(":data-cities"))
+
+    implementation (libs.androidx.paging.runtime.ktx)
+    implementation (libs.androidx.paging.compose)
 }
