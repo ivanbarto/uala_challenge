@@ -1,11 +1,15 @@
 package com.ivanbarto.challenge
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
+import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
@@ -111,5 +115,82 @@ class ScreenTest {
         composeTestRule.onAllNodesWithText(string).onFirst().performClick()
 
         composeTestRule.onNodeWithTag(TestTag.STATIC_MAP_SCREEN).assertExists()
+    }
+
+    @Test
+    fun on_successive_prefix_filter_cities_list_is_updated() {
+        val string = ApplicationProvider.getApplicationContext<ApplicationActivity>()
+            .getString(R.string.text_see_details)
+
+        val searchBarHint = ApplicationProvider.getApplicationContext<ApplicationActivity>()
+            .getString(R.string.text_search_city)
+
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+
+        composeTestRule.setContent {
+            ChallengeTheme {
+                CitiesScreen(navController)
+            }
+        }
+
+        composeTestRule.waitUntil(timeoutMillis = 20000) {
+            composeTestRule
+                .onAllNodesWithText(string)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+
+        composeTestRule.onNodeWithText(searchBarHint).performTextInput("this is a test")
+
+        composeTestRule.waitUntil(timeoutMillis = 4000) {
+            composeTestRule
+                .onAllNodesWithText(string)
+                .fetchSemanticsNodes().isEmpty()
+        }
+
+        composeTestRule
+            .onAllNodesWithText(string).assertCountEquals(0)
+
+        composeTestRule.onNodeWithText("this is a test").performTextClearance()
+        composeTestRule.onNodeWithText(searchBarHint).performTextInput("san jorge, ar")
+
+        composeTestRule.waitUntil(timeoutMillis = 4000) {
+            composeTestRule
+                .onAllNodesWithText(string)
+                .fetchSemanticsNodes().count() == 1
+        }
+
+        composeTestRule
+            .onAllNodesWithText(string).assertCountEquals(1)
+    }
+
+    @Test
+    fun on_favorite_filter_cities_list_is_updated() {
+        val string = ApplicationProvider.getApplicationContext<ApplicationActivity>()
+            .getString(R.string.text_see_details)
+
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+
+        composeTestRule.setContent {
+            ChallengeTheme {
+                CitiesScreen(navController)
+            }
+        }
+
+        composeTestRule.waitUntil(timeoutMillis = 20000) {
+            composeTestRule
+                .onAllNodesWithText(string)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+
+        composeTestRule.onNodeWithTag(TestTag.CITY_FILTER_CHECK_BOX).performClick()
+
+        composeTestRule.waitUntil(timeoutMillis = 4000) {
+            composeTestRule
+                .onAllNodesWithText(string)
+                .fetchSemanticsNodes().isEmpty()
+        }
+
+        composeTestRule
+            .onAllNodesWithText(string).assertCountEquals(0)
     }
 }
