@@ -13,5 +13,7 @@ class Dimensions {
         val iconSizeSmall = 18.dp
         val iconSizeMedium = 24.dp
         val iconSizeLarge = 32.dp
+
+        val borderStroke = 2.dp
     }
 }

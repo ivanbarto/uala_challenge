@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,7 +57,8 @@ fun CityDetailsScreen(navController: NavController, cityId: String) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(Color.White),
                 verticalArrangement = Arrangement.spacedBy(Dimensions.paddingLarge)
             ) {
                 Box(contentAlignment = Alignment.TopStart) {
@@ -87,7 +89,20 @@ fun CityDetailsScreen(navController: NavController, cityId: String) {
                     }
                 }
 
-                Text(text = city.toString(), style = Typography.titleLarge)
+                Column(
+                    modifier = Modifier.padding(horizontal = Dimensions.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.paddingMedium)
+                ) {
+                    Text(text = city.toString(), style = Typography.titleLarge)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_map_pin),
+                            modifier = Modifier.size(Dimensions.iconSizeSmall),
+                            contentDescription = null
+                        )
+                        Text(text = city.coordinate.toString(), style = Typography.titleMedium)
+                    }
+                }
             }
         }
     }

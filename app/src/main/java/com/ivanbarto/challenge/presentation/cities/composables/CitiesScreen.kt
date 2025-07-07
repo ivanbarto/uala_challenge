@@ -75,7 +75,7 @@ fun CitiesScreen(navController: NavController) {
                         .weight(1f)
                         .fillMaxHeight()
                         .padding(horizontal = Dimensions.paddingSmall),
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.paddingXSmall)
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.paddingSmall)
                 ) {
                     stickyHeader {
                         SearchBar(
@@ -136,17 +136,11 @@ fun CitiesScreen(navController: NavController) {
                         )
                     }
 
-                    stickyHeader {
-                        Text(
-                            text =
-                                "ITEMS COUNT: ${state.itemSnapshotList.items.count()}"
-                        )
-                    }
-
                     items(state.itemCount) { index ->
                         state[index]?.let { city ->
                             CityItem(
                                 city = city,
+                                isSelected = selectedCity?.id == city.id,
                                 onClick = {
                                     viewModel.selectCity(it)
                                 },
@@ -158,6 +152,7 @@ fun CitiesScreen(navController: NavController) {
                                 },
                                 onMarkAsFavorite = {
                                     viewModel.markAsFavorite(city)
+                                    state.refresh()
                                 }
                             )
                         }
