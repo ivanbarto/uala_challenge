@@ -14,8 +14,8 @@ class CityPagingSource(
 
     override fun getRefreshKey(state: PagingState<Int, City>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(PaginationConstants.PAGE_INCREMENT)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(PaginationConstants.PAGE_INCREMENT)
         }
     }
 
@@ -28,41 +28,29 @@ class CityPagingSource(
                 databasePopulated = true
             }
 
-            var prevKey: Int? = null
-            var nextKey: Int? = null
-
             val results = when {
                 filterFavorites -> {
-                    val paginatedCities = if (prefix.isNotEmpty()) {
+                    if (prefix.isNotEmpty()) {
                         cityInteractor.favoriteCitiesByPrefix(page, prefix)
                     } else {
                         cityInteractor.favoriteCities(page)
                     }
-
-                    prevKey = if (page == 1) null else page.minus(1)
-                    nextKey = if (paginatedCities.isEmpty()) null else page.plus(1)
-
-                    paginatedCities
                 }
 
                 prefix.isNotEmpty() -> {
-                    val paginatedCities = cityInteractor.citiesByPrefix(page, prefix)
-
-                    prevKey = if (page == 1) null else page.minus(1)
-                    nextKey = if (paginatedCities.isEmpty()) null else page.plus(1)
-
-                    paginatedCities
+                    cityInteractor.citiesByPrefix(page, prefix)
                 }
 
                 else -> {
-                    val paginatedCities = cityInteractor.paginatedCities(page = page)
-
-                    prevKey = if (page == 1) null else page.minus(1)
-                    nextKey = if (paginatedCities.isEmpty()) null else page.plus(1)
-
-                    paginatedCities
+                    cityInteractor.paginatedCities(page = page)
                 }
             }
+
+            val prevKey =
+                if (page == PaginationConstants.FIRST_PAGE) null else page.minus(PaginationConstants.PAGE_INCREMENT)
+
+            val nextKey =
+                if (results.isEmpty()) null else page.plus(PaginationConstants.PAGE_INCREMENT)
 
             LoadResult.Page(
                 data = results,

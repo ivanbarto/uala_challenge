@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import com.ivanbarto.challenge.presentation.base.BaseViewModel
 import com.ivanbarto.challenge.presentation.base.UiState
 import com.ivanbarto.challenge.presentation.cities.pagination.CityPagingSource
+import com.ivanbarto.challenge.presentation.cities.pagination.PaginationConstants
 import com.ivanbarto.domain_cities.City
 import com.ivanbarto.domain_cities.CityInteractor
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+
 
 class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewModel() {
 
@@ -26,22 +28,9 @@ class CitiesViewModel(private val cityInteractor: CityInteractor) : BaseViewMode
     private val _selectedCity: MutableStateFlow<City?> = MutableStateFlow(null)
     val selectedCity: StateFlow<City?> = _selectedCity.asStateFlow()
 
-    fun filterCities(
-        citiesToFilter: List<City>,
-        filterValue: String
-    ) = citiesToFilter.filter {
-        (it.name.replace(" ", "") + it.country)
-            .startsWith(
-                filterValue
-                    .replace(",", "")
-                    .replace(" ", ""),
-                ignoreCase = true
-            )
-    }
-
     val cities = Pager(
         config = PagingConfig(
-            pageSize = 40,
+            pageSize = PaginationConstants.PAGE_SIZE,
         ),
         pagingSourceFactory = {
             CityPagingSource(
