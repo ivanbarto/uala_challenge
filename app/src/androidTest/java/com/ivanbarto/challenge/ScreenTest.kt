@@ -9,12 +9,14 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.device.DeviceInteraction.Companion.setScreenOrientation
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.ivanbarto.challenge.koin.ApplicationActivity
 import com.ivanbarto.challenge.presentation.cities.composables.CitiesScreen
 import com.ivanbarto.challenge.presentation.cities.navigation.ScreenNavigation
 import com.ivanbarto.challenge.tools.TestTag
@@ -44,7 +46,7 @@ class ScreenTest {
         navController = TestNavHostController(
             InstrumentationRegistry.getInstrumentation().targetContext
         ).apply {
-            navigatorProvider.addNavigator(ComposeNavigator()) // explicitly add for testing
+            navigatorProvider.addNavigator(ComposeNavigator())
         }
     }
 
@@ -73,7 +75,6 @@ class ScreenTest {
         }
 
         composeTestRule.onNodeWithTag(TestTag.DYNAMIC_MAP_SCREEN).assertExists()
-
     }
 
     @Test
@@ -90,6 +91,9 @@ class ScreenTest {
 
     @Test
     fun on_see_details_click_navigation_is_performed() {
+        val string = ApplicationProvider.getApplicationContext<ApplicationActivity>()
+            .getString(R.string.text_see_details)
+
         onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
 
         composeTestRule.setContent {
@@ -100,11 +104,11 @@ class ScreenTest {
 
         composeTestRule.waitUntil(timeoutMillis = 20000) {
             composeTestRule
-                .onAllNodesWithText("See Details")
+                .onAllNodesWithText(string)
                 .fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeTestRule.onAllNodesWithText("See Details").onFirst().performClick()
+        composeTestRule.onAllNodesWithText(string).onFirst().performClick()
 
         composeTestRule.onNodeWithTag(TestTag.STATIC_MAP_SCREEN).assertExists()
     }
