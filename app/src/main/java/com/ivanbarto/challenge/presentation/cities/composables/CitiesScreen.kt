@@ -51,7 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CitiesScreen(navController: NavController) {
     val viewModel: CitiesViewModel = koinViewModel()
 
-    val state = viewModel.cities.collectAsLazyPagingItems()
+    val cities = viewModel.cities.collectAsLazyPagingItems()
     val screenState = viewModel.uiState.collectAsState().value
     val cityNameFilter = viewModel.cityNameFilter.collectAsState().value
     val filterFavorites = viewModel.filterFavorites.collectAsState().value
@@ -78,66 +78,22 @@ fun CitiesScreen(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(Dimensions.paddingSmall)
                 ) {
                     stickyHeader {
-                        SearchBar(
-                            colors = SearchBarDefaults.colors(containerColor = Color.White),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = Dimensions.paddingXLarge)
-                                .testTag(TestTag.CITY_SEARCH_BAR),
-                            inputField = {
-                                SearchBarDefaults.InputField(
-                                    query = cityNameFilter,
-                                    onQueryChange = {
-                                        viewModel.filterCityByName(it)
-                                        state.refresh()
-                                    },
-                                    onSearch = { },
-                                    expanded = false,
-                                    onExpandedChange = { },
-                                    placeholder = {
-                                        Text(
-                                            stringResource(R.string.text_search_city),
-                                            style = Typography.bodyMedium
-                                        )
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Search,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    trailingIcon = {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Checkbox(
-                                                colors = CheckboxDefaults.colors(checkedColor = Purple40),
-                                                modifier = Modifier.testTag(TestTag.CITY_FILTER_CHECK_BOX),
-                                                checked = filterFavorites,
-                                                onCheckedChange = {
-                                                    viewModel.filterFavorites(filterFavorites.not())
-                                                    state.refresh()
-                                                }
-                                            )
-                                            Text(
-                                                modifier = Modifier.padding(end = Dimensions.paddingSmall),
-                                                text = stringResource(R.string.text_favorites),
-                                                style = Typography.bodyMedium.copy(
-                                                    color = if (filterFavorites) Purple40 else Typography.bodyMedium.color
-                                                )
-                                            )
-                                        }
-                                    },
-                                )
+                        SearchBox(
+                            cityNameFilter = cityNameFilter,
+                            filterFavorites = filterFavorites,
+                            onCheckedChange = {
+                                viewModel.filterFavorites(filterFavorites.not())
+                                cities.refresh()
                             },
-                            expanded = false,
-                            onExpandedChange = {},
-                            content = {}
+                            onQueryChange = { text ->
+                                viewModel.filterCityByName(text)
+                                cities.refresh()
+                            }
                         )
                     }
 
-                    items(state.itemCount) { index ->
-                        state[index]?.let { city ->
+                    items(cities.itemCount) { index ->
+                        cities[index]?.let { city ->
                             CityItem(
                                 city = city,
                                 isSelected = selectedCity?.id == city.id,
@@ -152,7 +108,7 @@ fun CitiesScreen(navController: NavController) {
                                 },
                                 onMarkAsFavorite = {
                                     viewModel.markAsFavorite(city)
-                                    state.refresh()
+                                    cities.refresh()
                                 }
                             )
                         }
@@ -169,11 +125,75 @@ fun CitiesScreen(navController: NavController) {
                 }
             }
             if (screenState == UiState.LOADING ||
-                state.loadState.append == LoadState.Loading ||
-                state.loadState.refresh == LoadState.Loading
+                cities.loadState.append == LoadState.Loading ||
+                cities.loadState.refresh == LoadState.Loading
             ) {
                 CircularProgressIndicator(color = Purple40)
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBox(
+    cityNameFilter: String,
+    filterFavorites: Boolean,
+    onQueryChange: (text: String) -> Unit,
+    onCheckedChange: () -> Unit
+) {
+    SearchBar(
+        colors = SearchBarDefaults.colors(containerColor = Color.White),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = Dimensions.paddingXLarge)
+            .testTag(TestTag.CITY_SEARCH_BAR),
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = cityNameFilter,
+                onQueryChange = {
+                    onQueryChange.invoke(it)
+                },
+                onSearch = { },
+                expanded = false,
+                onExpandedChange = { },
+                placeholder = {
+                    Text(
+                        stringResource(R.string.text_search_city),
+                        style = Typography.bodyMedium
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            colors = CheckboxDefaults.colors(checkedColor = Purple40),
+                            modifier = Modifier.testTag(TestTag.CITY_FILTER_CHECK_BOX),
+                            checked = filterFavorites,
+                            onCheckedChange = {
+                                onCheckedChange.invoke()
+                            }
+                        )
+                        Text(
+                            modifier = Modifier.padding(end = Dimensions.paddingSmall),
+                            text = stringResource(R.string.text_favorites),
+                            style = Typography.bodyMedium.copy(
+                                color = if (filterFavorites) Purple40 else Typography.bodyMedium.color
+                            )
+                        )
+                    }
+                },
+            )
+        },
+        expanded = false,
+        onExpandedChange = {},
+        content = {}
+    )
 }
